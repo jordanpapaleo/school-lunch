@@ -4,5 +4,9 @@
 </script>
 
 <main>
-  <Router.default {routes} />
+  <section class="section">
+    <div class="container">
+      <Router.default {routes} />
+    </div>
+  </section>
 </main>

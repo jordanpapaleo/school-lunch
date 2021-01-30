@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   parser: 'babel-eslint',
   parserOptions: {
@@ -18,15 +18,16 @@ module.exports = {
     },
   ],
   rules: {
+    'import/first': 'off',
     'array-bracket-spacing': ['error', 'never'],
     'array-element-newline': 'off',
-    camelcase: ['error', { ignoreDestructuring: true, properties: 'never' }],
+    'camelcase': ['error', { ignoreDestructuring: true, properties: 'never' }],
     'comma-dangle': ['error', 'always-multiline'],
     'no-multiple-empty-lines': 'off',
     'object-curly-spacing': ['error', 'always'],
     'object-property-newline': 'off',
     'quote-props': ['error', 'consistent'],
-    quotes: ['error', 'single'],
+    'quotes': ['error', 'single'],
     'space-before-function-paren': ['error', { anonymous: 'never', named: 'never', asyncArrow: 'always' }],
   },
 }
