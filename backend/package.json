@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npx eslint ./ && node ./bin/www",
+    "start": "node ./bin/www",
+    "dev": "DEBUG=backend:* npm run test && nodemon ./bin/www",
     "test": "npx eslint ./"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1"
   }
 }
