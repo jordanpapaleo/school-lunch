@@ -1,4 +1,9 @@
-## Initialize a new FS project
+# School Lunch
+
+This is a tutorial project from Fullstack.io.
+## Notes
+
+### Initialize a new Full Stack project
 
 ```bash
 mkdir -p project/frontend project/backend &&
@@ -10,7 +15,7 @@ cd ..
 ```
 
 
-## DB Stuff
+### DB
 
 ```bash
 # create a migration
