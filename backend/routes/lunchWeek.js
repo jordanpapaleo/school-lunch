@@ -1,36 +1,120 @@
 const express = require('express')
 const router = express.Router()
+const knex = require('../database/client')
 
-const lunchWeekList = [
-  {
-    id: 1,
-    weekOf: '2020-10-05',
-    isPublished: true,
-  },
-  {
-    id: 2,
-    weekOf: '2020-10-12',
-    isPublished: true,
-  },
-  {
-    id: 3,
-    weekOf: '2020-10-19',
-    isPublished: false,
-  },
-]
+// Create a helper function to select all the rows from the
+// lunch_week table
+const getLunchWeekList = () => {
+  return knex.select().from('lunch_week').orderBy('week_of')
+}
 
-router.get('/', function(req, res) {
-  res.send(lunchWeekList)
+const getLunchWeekById = (id) => {
+  return knex.select().from('lunch_week').where('lunch_week_id', id).first()
+}
+
+const createLunchWeek = (lunchWeek) => {
+  return knex('lunch_week').insert(lunchWeek).returning('lunch_week_id')
+}
+
+const updateLunchWeek = (id, update) => {
+  return knex('lunch_week').where('lunch_week_id', id).update(update)
+}
+
+const deleteLunchWeek = (lunchWeekId) => {
+  return knex('lunch_week').where('lunch_week_id', lunchWeekId).del()
+}
+
+router.get('/', async function(req, res) {
+  try {
+    const lunchWeekList = await getLunchWeekList()
+    res.send(lunchWeekList)
+  } catch (err) {
+    console.log(err)
+    res
+      .status(500)
+      .send({
+        message: 'Error getting Lunch Week List',
+        error: err.toString(),
+      })
+  }
 })
 
-router.get('/:id', function(req, res) {
+router.get('/:id', async function(req, res) {
   const id = parseInt(req.params.id)
-  const lunchWeek = lunchWeekList.find((x) => x.id === id)
 
-  if (lunchWeek) {
-    res.send(lunchWeek)
-  } else {
-    res.status(404).send()
+  try {
+    const lunchWeek = await getLunchWeekById(id)
+    if (lunchWeek) {
+      res.send(lunchWeek)
+    } else {
+      res
+        .status(404)
+        .send({
+          message: `Lunch week id ${id} not found`,
+        })
+    }
+  } catch (err) {
+    console.log(err)
+    res
+      .status(500)
+      .send({
+        message: `Error getting lunch week id ${id}`,
+        error: err.toString(),
+        params: req.params,
+      })
+  }
+})
+
+router.post('/', async (req, res) => {
+  const lunchWeek = req.body
+
+  try {
+    const insertResponse = await createLunchWeek(lunchWeek)
+    // Since you can insert more than one row with `knex.insert`, the response is
+    // an array, so we need to return the 0 position
+    res.send({ lunchWeekId: insertResponse[0] })
+  } catch (err) {
+    console.log(err)
+    const message = 'Error creating Lunch Week'
+    res
+      .status(500)
+      .send({ message: message, error: err.toString() })
+  }
+})
+
+router.put('/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.lunchWeekId)
+    const lunchWeek = req.body
+
+    if (id !== lunchWeek.lunchWeekId) {
+      const message = 'Bad request, IDs do not match'
+      res.status(400).send({ message: message })
+      // IMPORTANT, we need to explicitly return here, otherwise the rest
+      // of the endpoint code will continue to run.
+      // In other words, res.send does not return like you might think it would
+      return
+    }
+
+    await updateLunchWeek(id, lunchWeek)
+    res.send()
+  } catch (err) {
+    console.log(err)
+    const message = 'Error updating Lunch Week'
+    res
+      .status(500)
+      .send({ message: message, error: err.toString() })
+  }
+})
+
+router.delete('/:lunchWeekId', async function(req, res) {
+  try {
+    const id = parseInt(req.params.lunchWeekId)
+    await deleteLunchWeek(id)
+    res.send()
+  } catch (e) {
+    const message = 'Error deleting Lunch Week'
+    res.status(500).send({ message: message, error: e.toString() })
   }
 })
 
