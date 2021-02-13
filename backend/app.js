@@ -20,7 +20,7 @@ app.use(cookieParser())
 const router = express.Router()
 
 router.use('/users', usersRouter)
-router.use('/lunchweek', lunchWeekRouter)
+router.use('/lunch-week', lunchWeekRouter)
 app.use('/api', router)
 
 module.exports = app
