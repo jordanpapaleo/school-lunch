@@ -7,6 +7,7 @@
     "test": "(cd frontend && npm run test) && (cd backend && npm run test)",
     "backend:dev": "cd backend && npm run dev",
     "backend": "cd backend && npm start",
+    "frontend:build": "cd frontend && npm run build",
     "frontend:dev": "cd frontend && npm run dev",
     "frontend": "cd frontend && npm start",
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\""

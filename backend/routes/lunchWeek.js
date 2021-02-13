@@ -12,8 +12,8 @@ const getLunchWeekById = (id) => {
   return knex.select().from('lunch_week').where('lunch_week_id', id).first()
 }
 
-const createLunchWeek = (lunchWeek) => {
-  return knex('lunch_week').insert(lunchWeek).returning('lunch_week_id')
+const createLunchWeek = (newLunchWeek) => {
+  return knex('lunch_week').insert(newLunchWeek).returning('lunch_week_id')
 }
 
 const updateLunchWeek = (id, update) => {
@@ -53,9 +53,9 @@ router.get('/:id', async (req, res) => {
   const id = parseInt(req.params.id)
 
   try {
-    const lunchWeek = await getLunchWeekById(id)
-    if (lunchWeek) {
-      res.send(lunchWeek)
+    const newLunchWeek = await getLunchWeekById(id)
+    if (newLunchWeek) {
+      res.send(newLunchWeek)
     } else {
       res
         .status(404)
@@ -76,7 +76,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const lunchWeek = req.body
+  const newLunchWeek = req.body
   /*
     {
      "isPublished": false,
@@ -87,11 +87,11 @@ router.post('/', async (req, res) => {
   try {
     const errors = []
 
-    if (lunchWeek.isPublished === undefined || typeof lunchWeek.isPublished !== 'boolean') {
+    if (newLunchWeek.isPublished === undefined || typeof newLunchWeek.isPublished !== 'boolean') {
       errors.push('isPublished is a required boolean')
     }
 
-    if (lunchWeek.weekOf === undefined || typeof lunchWeek.weekOf !== 'string') {
+    if (newLunchWeek.weekOf === undefined || typeof newLunchWeek.weekOf !== 'string') {
       errors.push('weekOf is a required string')
     }
 
@@ -102,10 +102,11 @@ router.post('/', async (req, res) => {
       return
     }
 
-    const insertResponse = await createLunchWeek(lunchWeek)
+    const insertResponse = await createLunchWeek(newLunchWeek)
     // Since you can insert more than one row with `knex.insert`, the response is
     // an array, so we need to return the 0 position
-    res.send({ lunchWeekId: insertResponse[0] })
+    const lunchWeek = await getLunchWeekById(insertResponse[0])
+    res.send(lunchWeek)
   } catch (err) {
     console.log(err)
     const message = 'Error creating Lunch Week'
@@ -196,7 +197,7 @@ type LunchWeekT = {
 }
 
 {
- lunchWeek: {
+ newLunchWeek: {
    lunchWeekId: 1,
    weekOf: '2020-10-05',
    isPublished: false,
