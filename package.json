@@ -1,0 +1,27 @@
+{
+  "name": "svelte-school-lunch",
+  "version": "1.0.0",
+  "description": "This is a tutorial project from Fullstack.io. ## Notes",
+  "main": "index.js",
+  "scripts": {
+    "test": "(cd frontend && npm run test) && (cd backend && npm run test)",
+    "backend:dev": "cd backend && npm run dev",
+    "backend": "cd backend && npm start",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordanpapaleo/school-lunch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jordanpapaleo/school-lunch/issues"
+  },
+  "homepage": "https://github.com/jordanpapaleo/school-lunch#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

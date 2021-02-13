@@ -24,7 +24,7 @@ const deleteLunchWeek = (lunchWeekId) => {
   return knex('lunch_week').where('lunch_week_id', lunchWeekId).del()
 }
 
-router.get('/', async function(req, res) {
+router.get('/', async (req, res) => {
   try {
     const lunchWeekList = await getLunchWeekList()
     res.send(lunchWeekList)
@@ -39,7 +39,7 @@ router.get('/', async function(req, res) {
   }
 })
 
-router.get('/:id', async function(req, res) {
+router.get('/:id', async (req, res) => {
   const id = parseInt(req.params.id)
 
   try {
@@ -67,8 +67,31 @@ router.get('/:id', async function(req, res) {
 
 router.post('/', async (req, res) => {
   const lunchWeek = req.body
+  /*
+    {
+     "isPublished": false,
+     "weekOf": "2020-11-07"
+    }
+  */
 
   try {
+    const errors = []
+
+    if (lunchWeek.isPublished === undefined || typeof lunchWeek.isPublished !== 'boolean') {
+      errors.push('isPublished is a required boolean')
+    }
+
+    if (lunchWeek.weekOf === undefined || typeof lunchWeek.weekOf !== 'string') {
+      errors.push('weekOf is a required string')
+    }
+
+    if (errors.length) {
+      res
+        .status(422)
+        .send({ message: 'Missing or invalid data', error: errors.join(', ') })
+      return
+    }
+
     const insertResponse = await createLunchWeek(lunchWeek)
     // Since you can insert more than one row with `knex.insert`, the response is
     // an array, so we need to return the 0 position
@@ -84,20 +107,12 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.lunchWeekId)
-    const lunchWeek = req.body
+    const id = parseInt(req.params.id)
+    const update = req.body
+    const lunchWeekUpdateId = await updateLunchWeek(id, update)
+    const updatedLunchWeek = await getLunchWeekById(lunchWeekUpdateId)
 
-    if (id !== lunchWeek.lunchWeekId) {
-      const message = 'Bad request, IDs do not match'
-      res.status(400).send({ message: message })
-      // IMPORTANT, we need to explicitly return here, otherwise the rest
-      // of the endpoint code will continue to run.
-      // In other words, res.send does not return like you might think it would
-      return
-    }
-
-    await updateLunchWeek(id, lunchWeek)
-    res.send()
+    res.send(updatedLunchWeek)
   } catch (err) {
     console.log(err)
     const message = 'Error updating Lunch Week'
@@ -107,9 +122,9 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:lunchWeekId', async function(req, res) {
+router.delete('/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.lunchWeekId)
+    const id = parseInt(req.params.id)
     await deleteLunchWeek(id)
     res.send()
   } catch (e) {
