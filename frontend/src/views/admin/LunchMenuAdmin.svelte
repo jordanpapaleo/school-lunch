@@ -8,6 +8,8 @@
   import { user } from '../../stores.js'
   import Checkbox from '../../components/Checkbox.svelte'
   import Input from '../../components/Input.svelte'
+  import createAuth0Client from '@auth0/auth0-spa-js'
+  import auth0Config from '../../auth0-config'
 
   const myDate = new Date().getTime()
   let lunchWeeks = []
@@ -17,7 +19,13 @@
   let showCreate = false
 
   onMount(async () => {
-    const res = await fetch(`${process.env.API_ROOT}/api/lunch-week`)
+    const auth0 = await createAuth0Client(auth0Config)
+    const token = await auth0.getTokenSilently()
+    const res = await fetch(`${process.env.API_ROOT}/api/lunch-week`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .catch((err) => { console.log(err) })
 
     if (res.ok) {
