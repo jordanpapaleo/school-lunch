@@ -19,8 +19,8 @@
   })
 </script>
 
-<div>
-  Admin Layout
+<div class="AdminLayout-component">
+  <h4>Admin Layout</h4>
 
   {#if initialized}
     <Route.default {currentRoute} />

@@ -1,12 +1,13 @@
 <script>
-  import { onMount } from 'svelte'
+  import { format } from 'date-fns'
   import { navigateTo } from 'svelte-router-spa'
+  import { onMount } from 'svelte'
   import Icon from 'svelte-awesome'
+
   import { refresh, times } from 'svelte-awesome/icons'
   import { user } from '../../stores.js'
-  import Input from '../../components/Input.svelte'
   import Checkbox from '../../components/Checkbox.svelte'
-  import { format } from 'date-fns'
+  import Input from '../../components/Input.svelte'
 
   const myDate = new Date().getTime()
   let lunchWeeks = []

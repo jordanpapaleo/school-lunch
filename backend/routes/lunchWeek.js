@@ -34,6 +34,10 @@ const updateLunchDay = (lunchDayId, lunchDay) => {
   return knex('lunch_day').where('lunch_day_id', lunchDayId).update(lunchDay)
 }
 
+const getLunchDayList = (lunchWeekId) => {
+  return knex.select().from('lunch_day').where('lunch_week_id', lunchWeekId)
+}
+
 router.get('/', async (req, res) => {
   try {
     const lunchWeekList = await getLunchWeekList()
@@ -50,12 +54,14 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  const id = parseInt(req.params.id)
-
   try {
-    const newLunchWeek = await getLunchWeekById(id)
-    if (newLunchWeek) {
-      res.send(newLunchWeek)
+    const id = parseInt(req.params.id)
+    const lunchWeek = await getLunchWeekById(id)
+
+    if (lunchWeek) {
+      const lunchDays = await getLunchDayList(id)
+      lunchWeek.lunchDays = lunchDays
+      res.send(lunchWeek)
     } else {
       res
         .status(404)
@@ -147,17 +153,18 @@ router.delete('/:id', async (req, res) => {
 })
 
 router.post('/:lunchWeekId/lunch-day', async function(req, res) {
-  const lunchDay = req.body
   try {
+    const lunchDay = req.body
     const insertResponse = await createLunchDay({
       ...lunchDay,
-      lunch_week_id: parseInt(req.params.lunchWeekId),
+      lunchWeekId: parseInt(req.params.lunchWeekId),
     })
 
     res.send({ lunchDayId: insertResponse[0] })
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     const message = 'Error creating Lunch Day'
-    res.status(500).send({ message: message, error: e.toString() })
+    res.status(500).send({ message: message, error: err.toString() })
   }
 })
 
@@ -165,12 +172,6 @@ router.put('/:lunchWeekId/lunch-day/:lunchDayId', async function(req, res) {
   try {
     const lunchDayId = parseInt(req.params.lunchDayId)
     const lunchDay = req.body
-
-    if (lunchDayId !== lunchDay.lunchDayId) {
-      const message = 'Bad request, IDs do not match'
-      res.status(400).send({ message: message })
-      return
-    }
     await updateLunchDay(lunchDayId, lunchDay)
     res.send()
   } catch (e) {

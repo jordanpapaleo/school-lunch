@@ -15,6 +15,8 @@ const aliases = alias({
   resolve: ['.svelte', '.js'],
   entries: [
     { find: 'views', replacement: 'src/views' },
+    { find: 'components', replacement: 'src/components' },
+    { find: 'utils', replacement: 'src/utils' },
   ],
 })
 
