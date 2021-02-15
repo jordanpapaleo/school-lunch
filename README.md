@@ -14,7 +14,6 @@ npx degit sveltejs/template frontend &&
 cd ..
 ```
 
-
 ### DB
 
 ```bash

@@ -10,6 +10,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
   },
+  ignorePatterns: ['public/*'],
   rules: {
     'array-bracket-spacing': ['error', 'never'],
     'object-curly-spacing': ['error', 'always'],

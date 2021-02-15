@@ -1,16 +1,18 @@
 {
   "name": "svelte-school-lunch",
   "version": "1.0.0",
-  "description": "This is a tutorial project from Fullstack.io. ## Notes",
-  "main": "index.js",
+  "description": "This is a tutorial project from Fullstack.io.",
   "scripts": {
-    "test": "(cd frontend && npm run test) && (cd backend && npm run test)",
-    "backend:dev": "cd backend && npm run dev",
-    "backend": "cd backend && npm start",
-    "frontend:build": "cd frontend && npm run build",
-    "frontend:dev": "cd frontend && npm run dev",
-    "frontend": "cd frontend && npm start",
-    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\""
+    "backend:dev": "(cd backend && npm run dev)",
+    "backend:start": "(cd backend && npm start)",
+    "build": "rm -rf backend/public && npm run frontend:build && cp -a frontend/public backend/public",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "frontend:build": "(cd frontend && npm run build)",
+    "frontend:dev": "(cd frontend && npm run dev)",
+    "install-dep": "(cd frontend && yarn) && (cd backend && yarn) && yarn",
+    "purge": "rm -rf frontend/node_modules/ frontend/yarn.lock backend/node_modules/ backend/yarn.lock node_modules/ yarn.lock && yarn install-dep",
+    "start": "npm run backend:start",
+    "test": "(cd frontend && npm run test) && (cd backend && npm run test)"
   },
   "repository": {
     "type": "git",
@@ -24,8 +26,5 @@
   "homepage": "https://github.com/jordanpapaleo/school-lunch#readme",
   "devDependencies": {
     "concurrently": "^5.3.0"
-  },
-  "dependencies": {
-    "@auth0/auth0-spa-js": "1.12.0"
   }
 }

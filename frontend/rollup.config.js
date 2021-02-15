@@ -1,14 +1,15 @@
 import { terser } from 'rollup-plugin-terser'
-import svelte from 'rollup-plugin-svelte'
 import alias from '@rollup/plugin-alias'
 import commonjs from '@rollup/plugin-commonjs'
 import css from 'rollup-plugin-css-only'
 import livereload from 'rollup-plugin-livereload'
-import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
+import resolve from '@rollup/plugin-node-resolve'
+import svelte from 'rollup-plugin-svelte'
 
 const production = !process.env.ROLLUP_WATCH
-const API_ROOT = production ? '' : 'http://localhost:3000'
+// Port comes from backend/.env
+const API_ROOT = production ? '' : 'http://localhost:5001'
 
 const aliases = alias({
   // optional, by default this will just look for .js files or folders

@@ -28,4 +28,8 @@ router.use('/users', usersRouter)
 router.use('/lunch-week', authenticateJwt, lunchWeekRouter)
 app.use('/api', router)
 
+app.use('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '/public/index.html'))
+})
+
 module.exports = app

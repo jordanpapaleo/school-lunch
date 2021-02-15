@@ -1,6 +1,5 @@
 <script>
   export let value
-  export let options
   export let label
   export let placeholder = 'Type here'
   export let type = 'text'
